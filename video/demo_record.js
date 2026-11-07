@@ -8,12 +8,14 @@ const { chromium } = require('playwright');
 const [fontsDir, voiceDir, framesDir] = process.argv.slice(2);
 const ROOT = path.join(__dirname, '..');
 const LINES = JSON.parse(fs.readFileSync(path.join(voiceDir, 'demo_lines.json'), 'utf8'));
-const GAP = 0.55;
+const GAP = 0.4;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // real output from our own runs, shown in the terminal scene
 const holdout = fs.readFileSync(path.join(ROOT, 'log_2026-03-01.txt'), 'utf8').split('\n');
 const pick = name => holdout.find(l => l.startsWith(name + ' ')).trim().split(/\s+/);
+const holdout2 = fs.readFileSync(path.join(ROOT, 'log_2025-09-01.txt'), 'utf8').split('\n');
+const pick2 = name => holdout2.find(l => l.startsWith(name + ' ')).trim().split(/\s+/);
 const fmtRow = (label, r) => `${label.padEnd(30)}${String(+r[1]).padStart(6)}   ${(r[2] * 100).toFixed(1).padStart(5)}%   $${Math.round(+r[3]).toLocaleString('en-AU').padStart(7)}`;
 const csvHead = fs.readFileSync(path.join(ROOT, 'valuation_fableandastra.csv'), 'utf8').split('\n').slice(0, 3);
 const csvRows = fs.readFileSync(path.join(ROOT, 'valuation_fableandastra.csv'), 'utf8').trim().split('\n').length;
@@ -103,6 +105,9 @@ const csvRows = fs.readFileSync(path.join(ROOT, 'valuation_fableandastra.csv'), 
     run3: async () => { termText += `\n${'method'.padEnd(30)}${'sales'.padStart(6)}   within 10%   typical miss\n`;
       termText += `<span class="hl">${fmtRow('our model', pick('model'))}</span>\n${fmtRow('last sale + price index', pick('last_sale_indexed'))}\n${fmtRow('suburb + bedroom median', pick('suburb_bedroom_median'))}\n\n`;
       await term(termText); },
+    run3b: async () => { termText = await typeCmd(termText, 'python model.py --holdout 2025-09-01', 30);
+      termText += '<span style="color:#7d8696">  train: sales from 2010 to 31 Aug 2025 · test: 2,068 sales, 1 Sep 2025 to 31 Aug 2026</span>\n';
+      await term(termText); await sleep(900); termText += `<span class="hl">${fmtRow('our model', pick2('model'))}</span>\n\n`; await term(termText); },
     run4: async () => { termText = await typeCmd(termText, 'python model.py --final fableandastra', 30);
       termText += '<span class="ok">wrote valuation_fableandastra.csv</span>\n'; await term(termText); await sleep(500);
       termText = await typeCmd(termText, 'head -3 valuation_fableandastra.csv; wc -l < valuation_fableandastra.csv', 22);
@@ -113,16 +118,20 @@ const csvRows = fs.readFileSync(path.join(ROOT, 'valuation_fableandastra.csv'), 
     data3: async () => { await scrollTo('#story2', 90); await sleep(1400); await moveTo('#cBeds div', 18); await sleep(900); await moveTo('#cBeds div', 3, 20); },
     data4: async () => { await scrollTo('#story4', 90); await sleep(1500); await moveTo('#cIdx svg', 0); await sleep(700); await click('#idxSeg [data-v="month"]'); },
     data5: async () => { await scrollTo('#story5', 90); await sleep(1300); await moveTo('#cAnch .hrow', 0); },
+    ins0: async () => { await scrollTo('#insights'); await sleep(1300); await moveTo('.ins', 0); await sleep(1600); await moveTo('.ins', 1, 20); await sleep(2200); await moveTo('.ins', 2, 20); },
     ins1: async () => { await scrollTo('#ladder', 150); await sleep(1300); await moveTo('#ladder .hrow', 20); },
     ins2: async () => { await click('#bedSeg [data-b="b2"]'); },
     ins3: async () => { await click('#sortSeg [data-s="growth"]'); },
     mod1: async () => { await scrollTo('#model'); await sleep(1200); await moveTo('.flow .st', 3, 40); },
     mod2: async () => { await scrollTo('#tl', 260); await sleep(1300); await click('#splitSeg [data-c="2025-09-01"]'); await sleep(1800); await moveTo('#tl .tr'); },
+    mod3: async () => { await scrollTo('#cWin', 230); await sleep(1300); await moveTo('#cWin .vbar', 1); },
     res1: async () => { await scrollTo('#results'); await sleep(1200); await moveTo('.met', 0); await sleep(1500); await moveTo('.met', 1, 20); },
+    res1b: async () => { await moveTo('.met', 2, 25); },
     res2: async () => { await scrollTo('#cRes', 260); await sleep(900); await click('#resSeg [data-v="hist"]'); await sleep(1900); await click('#resSeg [data-v="price"]'); },
     res3: async () => { await click('#resSeg [data-v="dir"]'); },
     look1: async () => { await scrollTo('#lookup'); },
     look2: async () => { await moveTo('#fSub'); await sleep(200); await page.selectOption('#fSub', 'Zetland'); await page.dispatchEvent('#fSub', 'change'); await sleep(700); await click('#fSize [data-v="l"]'); },
+    look2b: async () => { await click('#fTier [data-v="2"]'); },
     look3: async () => { await scrollTo('#lkList', 300); await sleep(900); await click('#lkList .lkr', 0); await sleep(1200); await moveTo('#bcard .bed', 1); },
     look4: async () => { await scrollTo('#bcard .sales', 120); await sleep(1500); await moveTo('#bcard .sale .gap', 2); },
     look5: async () => { await scrollTo('#lookup', 74); await sleep(900); await click('#fSize [data-v=""]'); await page.selectOption('#fSub', ''); await page.dispatchEvent('#fSub', 'change'); await sleep(300); await click('#q'); await page.keyboard.type('Harris Street', { delay: 70 }); await sleep(400); await scrollTo('#lkList', 300); await sleep(800); await click('#lkList .lkr', 0); },
@@ -144,7 +153,7 @@ const csvRows = fs.readFileSync(path.join(ROOT, 'valuation_fableandastra.csv'), 
     if (left > 0) await sleep(left * 1000);
     console.log(L.id, 'done at', (Date.now() / 1000 - t0).toFixed(1));
   }
-  await sleep(1500);
+  await sleep(1000);
   await cdp.send('Page.stopScreencast');
   fs.writeFileSync(path.join(framesDir, 'frames.json'), JSON.stringify(frames));
   fs.writeFileSync(path.join(framesDir, 'lines.json'), JSON.stringify(starts));

@@ -10,7 +10,7 @@ That includes the 72% that have never been sold, so a buyer or a bank can price 
 | **Submission** | [`valuation_fableandastra.csv`](valuation_fableandastra.csv): 181,711 rows, `gnaf_id,value` |
 | **Report** | [Open the interactive report](https://halinhtran-2205.github.io/microburbs-fableandastra/report.html) (charts and building lookup), or [`report.html`](report.html) |
 | **Pitch** | [`pitch.mp4`](pitch.mp4): 45 seconds |
-| **Demo** | [`demo.mp4`](demo.mp4): 2 min 19 s walkthrough of the model run and the live report |
+| **Demo** | [`demo.mp4`](demo.mp4): 2 min 58 s walkthrough of the model run and the live report |
 
 ## The problem
 
