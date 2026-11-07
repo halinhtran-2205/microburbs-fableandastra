@@ -10,7 +10,7 @@ That includes the 72% that have never been sold, so a buyer or a bank can price 
 | **Submission** | [`valuation_fableandastra.csv`](valuation_fableandastra.csv): 181,711 rows, `gnaf_id,value` |
 | **Report** | [Open the interactive report](https://halinhtran-2205.github.io/microburbs-fableandastra/report.html) (charts and building lookup), or [`report.html`](report.html) |
 | **Pitch** | [`pitch.mp4`](pitch.mp4): 45 seconds |
-| **Demo** | [`demo.mp4`](demo.mp4): up to 3 minutes |
+| **Demo** | [`demo.mp4`](demo.mp4): 2 min 19 s walkthrough of the model run and the live report |
 
 ## The problem
 
@@ -130,6 +130,7 @@ Set `USE_API=0` to run without the API facts.
 | `fetch_api.py` | Downloads property facts from the Microburbs API |
 | `report_data.py`, `report_template.html`, `make_report.py` | Build the interactive `report.html` |
 | `video/` | Pitch video source: scenes (`pitch.html`), renderer (`render.js`), voiceover (`make_voice.py`, Kokoro TTS), script and captions |
+| `video/demo_*` | Demo video: voice lines (`demo_voice.py`), scripted browser recording of the real report (`demo_record.js`), assembly (`demo_build.py`) |
 | `valuation_fableandastra.csv` | The submission |
 
 ## Team
