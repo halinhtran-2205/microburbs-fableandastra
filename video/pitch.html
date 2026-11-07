@@ -1,0 +1,263 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Fraunces;font-style:italic;font-weight:700;src:url(FONTS/fraunces/files/fraunces-latin-700-italic.woff2) format("woff2")}
+@font-face{font-family:Fraunces;font-style:normal;font-weight:700;src:url(FONTS/fraunces/files/fraunces-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:InterV;font-weight:500;src:url(FONTS/inter/files/inter-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:InterV;font-weight:600;src:url(FONTS/inter/files/inter-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:InterV;font-weight:800;src:url(FONTS/inter/files/inter-latin-800-normal.woff2) format("woff2")}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#04070e}
+body{font-family:InterV,Inter,sans-serif;color:#fff;position:relative}
+#map{position:absolute;inset:0;width:1080px;height:1920px}
+.vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 42%,transparent 55%,rgba(2,4,8,.55) 100%);pointer-events:none}
+.layer{position:absolute;will-change:opacity,transform}
+/* header */
+#logo{left:60px;top:58px;display:flex;align-items:center;gap:14px;font-family:Fraunces;font-weight:700;font-size:40px}
+#logo i{width:40px;height:40px;border-radius:10px;background:#2f7bff;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-family:InterV;font-weight:800;font-size:22px}
+#pill{right:60px;top:60px;background:#f5b417;color:#111;font-weight:800;font-size:26px;padding:6px 18px;border-radius:8px;transform:rotate(-2deg)}
+#series{left:60px;right:60px;top:150px;display:flex;align-items:center;gap:22px}
+#series .ix{width:76px;height:52px;border-radius:6px;background:#2f7bff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:28px}
+#series .lbl{font-size:17px;letter-spacing:.22em;color:#aab3c2;font-weight:600;text-transform:uppercase}
+#series .tt{font-family:Fraunces;font-style:italic;font-size:58px;line-height:1;margin-top:4px}
+#series .ct{margin-left:auto;font-size:24px;color:#aab3c2;font-weight:600;letter-spacing:.1em}
+/* cards */
+.card{left:70px;right:70px;bottom:380px;background:#f4efe4;color:#111;border-radius:18px;padding:34px 40px 30px;border-left:14px solid #d64545;box-shadow:0 20px 60px rgba(0,0,0,.45),0 0 50px rgba(61,139,255,.28)}
+.card .nm{font-weight:800;font-size:58px;letter-spacing:.01em;text-transform:uppercase;line-height:1}
+.card .sb{font-size:26px;color:#555;margin-top:8px}
+.card .big{font-weight:800;font-size:160px;line-height:.95;margin-top:10px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.card .ex{font-size:30px;margin-top:6px;font-weight:600}
+.card .ex small{font-size:22px;color:#666;font-weight:500;margin-left:8px}
+.bars{margin-top:22px;display:flex;flex-direction:column;gap:14px}
+.bar{display:grid;grid-template-columns:250px 1fr 120px;align-items:center;gap:16px;font-size:24px;font-weight:600}
+.bar .tr{height:26px;background:#e3dccd;border-radius:6px;overflow:hidden}
+.bar .fl{height:100%;border-radius:6px}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+/* captions */
+#cap{left:50px;right:50px;top:1580px;text-align:center;font-weight:800;font-size:56px;line-height:1.28;text-shadow:0 3px 14px rgba(0,0,0,.8)}
+#cap span{opacity:0}
+#cap span.on{opacity:1}
+#cap span.hl{background:#2f7bff;padding:0 12px;border-radius:6px;text-shadow:none;box-shadow:0 0 24px rgba(61,139,255,.75)}
+#src{left:60px;right:60px;bottom:34px;font-size:18px;color:#7d8696;text-align:center}
+/* big title */
+#title{left:0;right:0;top:560px;text-align:center;padding:80px 0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(3,6,12,.92) 0%,rgba(3,6,12,.75) 55%,rgba(3,6,12,0) 100%)}
+#title .t1,#title .n{text-shadow:0 0 30px rgba(90,160,255,.55)}
+#title .t1{font-family:Fraunces;font-style:italic;font-size:132px;line-height:1.02}
+#title .n{font-weight:800;font-size:120px;margin-top:40px;font-variant-numeric:tabular-nums}
+#title .s{font-size:34px;color:#c9d1dd;margin-top:6px}
+/* chart card */
+#chart{left:70px;right:70px;bottom:380px;background:#f4efe4;color:#111;border-radius:18px;padding:30px 36px;box-shadow:0 20px 60px rgba(0,0,0,.45),0 0 50px rgba(61,139,255,.28)}
+#chart h4{font-size:30px;font-weight:800}
+#chart p{font-size:22px;color:#666;margin-top:4px}
+/* chips + end */
+#chips{left:60px;right:60px;top:560px;display:flex;flex-direction:column;gap:22px;align-items:center}
+.chip{background:#f4efe4;color:#111;border-radius:999px;padding:18px 34px;font-size:40px;font-weight:800;display:flex;gap:16px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.chip i{width:22px;height:22px;border-radius:50%;background:#2f7bff}
+#end{inset:0;background:radial-gradient(circle at 50% 45%,#0e2350 0%,#04070e 65%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#end .b{font-family:Fraunces;font-weight:700;font-size:118px}
+#end .s{font-family:Fraunces;font-style:italic;font-size:70px;color:#9cc8ff;text-shadow:0 0 30px rgba(90,160,255,.8);margin-top:18px}
+#end .m{font-size:28px;color:#8b94a3;margin-top:60px;letter-spacing:.06em}
+</style></head>
+<body>
+<canvas id="map" width="1080" height="1920"></canvas>
+<div class="vig"></div>
+
+<div id="logo" class="layer"><i>F</i>FableAndAstra</div>
+<div id="pill" class="layer">TASK 5</div>
+<div id="series" class="layer"><div class="ix" id="sIx">01</div><div><div class="lbl">Every flat, priced</div><div class="tt" id="sTt">The trick</div></div><div class="ct" id="sCt">01 / 04</div></div>
+
+<div id="cardHook" class="layer card"><div class="nm">City of Sydney</div><div class="sb">Sydney, NSW</div><div class="big" style="color:#d64545" id="hookN">72%</div><div class="ex">of flats have never sold <small id="hookS"></small></div></div>
+
+<div id="title" class="layer"><div class="t1">Every flat.<br>Priced.</div><div class="n" id="cnt">0</div><div class="s">addresses valued at 31 August 2026</div></div>
+
+<div id="cardTrick" class="layer card" style="border-left-color:#2f7bff"><div class="nm" id="hName"></div><div class="sb" id="hSub"></div><div class="big" style="color:#2f7bff;font-size:150px" id="hVal"></div><div class="ex">2-bedroom value, all clues combined</div>
+  <div class="bars" id="hBars"></div></div>
+
+<div id="cardProof" class="layer card" style="border-left-color:#2f7bff"><div class="nm">Tested blind</div><div class="sb">930 later sales it never saw · Mar–Aug 2026</div><div class="big" style="color:#2f7bff" id="pN">72%</div><div class="ex">landed within 10% of the sale price</div>
+  <div class="bars" id="pBars"></div></div>
+
+<div id="cardBuy" class="layer card" style="border-left-color:#1baf7a"><div class="nm">What to pay</div><div class="sb">Same building, same bedrooms</div><div class="big" style="color:#12865d" id="bN">+$84k</div><div class="ex">what one car space adds to a 2-bed</div>
+  <div class="bars" id="bBars"></div></div>
+
+<div id="cardBank" class="layer card" style="border-left-color:#2f7bff"><div class="nm">Lend with confidence</div><div class="sb">Evidence behind every value</div><div class="big" style="color:#2f7bff" id="kN">51%</div><div class="ex">of homes ready for desktop valuation</div>
+  <div class="bars" id="kBars"></div></div>
+
+<div id="chart" class="layer"><h4>Flat prices, City of Sydney</h4><p>Repeat-sales index, 2016 to Aug 2026</p><svg id="line" viewBox="0 0 900 430" style="width:100%;height:auto;margin-top:10px"></svg></div>
+
+<div id="chips" class="layer"></div>
+<div id="end" class="layer"><div class="b">FableAndAstra</div><div class="s">Every flat, priced.</div><div class="m">MICROBURBS HACKATHON · TASK 5</div></div>
+
+<div id="cap" class="layer"></div>
+<div id="src" class="layer">Data: Microburbs API &amp; supplied files · ABS Census 2021 · Open G-NAF © Geoscape Australia · Estimates indicative only</div>
+
+<script>
+const D = /*DATA*/null;
+const $ = id => document.getElementById(id);
+const clamp = (v, a=0, b=1) => Math.max(a, Math.min(b, v));
+const ease = x => x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3)/2;
+const easeOut = x => 1 - Math.pow(1 - x, 3);
+const lerp = (a, b, k) => a + (b - a) * k;
+const fmtK = v => v >= 1e6 ? '$' + (v/1e6).toFixed(2) + 'm' : '$' + Math.round(v/1e3) + 'k';
+const pct = v => Math.round(v*100) + '%';
+
+/* ---------- show/hide helper: fade + rise ---------- */
+function show(el, t, a, b, fi=.45, fo=.35, rise=40){
+  const k = t < a ? 0 : t < a + fi ? easeOut((t - a)/fi) : t < b - fo ? 1 : t < b ? 1 - ease((t - (b - fo))/fo) : 0;
+  el.style.opacity = k; el.style.transform = `translateY(${(1 - k) * rise}px)`; el.style.display = k > 0 ? '' : 'none';
+  return k;
+}
+function grow(t, a, d=.8){ return easeOut(clamp((t - a)/d)); }
+
+/* ---------- static content ---------- */
+const H = D.hero; // name, suburb, lat, lon, flats, median, b1, b2, b3, tier
+$('hName').textContent = H[0]; $('hSub').textContent = `${H[1]}, NSW · ${H[4]} flats in the building`; $('hVal').textContent = fmtK(H[7]);
+const nsCount = Math.round(D.never_sold * 181711);
+$('hookS').textContent = `${nsCount.toLocaleString('en-AU')} of 181,711`;
+$('pN').textContent = pct(D.w10);
+$('bN').textContent = '+' + fmtK(D.park);
+$('kN').textContent = pct(D.tiers[0].share_all);
+function bars(host, rows, max){ $(host).innerHTML = rows.map(r => `<div class="bar"><div>${r[0]}</div><div class="tr"><div class="fl" style="background:${r[2]};width:0"></div></div><div class="v">${r[3] || ''}</div></div>`).join('');
+  return rows.map(r => r[1] / max); }
+const hB = bars('hBars', [['1 bedroom', H[6], '#7fb6ff', fmtK(H[6])], ['2 bedrooms', H[7], '#2f7bff', fmtK(H[7])], ['3 bedrooms', H[8], '#1f5fd6', fmtK(H[8])]], H[8]);
+const pB = bars('pBars', [['Our model', D.w10, '#2f7bff', pct(D.w10)], ['Last sale + market', .5045, '#a9b8cc', '50%'], ['Suburb median', D.median10, '#a9b8cc', pct(D.median10)]], 1);
+const twoBed = D.park / .0738;
+const bB = bars('bBars', [['No car space', twoBed, '#a9b8cc', fmtK(twoBed)], ['1 car space', twoBed + D.park, '#1baf7a', fmtK(twoBed + D.park)]], (twoBed + D.park) * 1.02);
+const T = D.tiers;
+const kB = bars('kBars', [['High evidence', T[0].share_all, '#2f7bff', pct(T[0].share_all)], ['Medium', T[1].share_all, '#7fb6ff', pct(T[1].share_all)], ['Low → valuer', T[2].share_all, '#eb6834', pct(T[2].share_all)]], .6);
+function setBars(host, w, t, a){ $(host).querySelectorAll('.fl').forEach((f, i) => f.style.width = (w[i] * 100 * grow(t, a + i * .18)) + '%'); }
+$('chips').innerHTML = ['181,711 flats valued', pct(D.w10) + ' within 10%', (D.w10 / D.median10).toFixed(1) + '× a suburb median'].map(s => `<div class="chip"><i></i>${s}</div>`).join('');
+
+/* line chart */
+const idx = D.index.filter(d => d[0] >= '2016');
+(() => { const s = $('line'), W = 900, Hh = 430, m = {l:50, r:20, t:30, b:40};
+  const ys = idx.map(d => d[1]), y0 = .8, y1 = 1.1;
+  const x = i => m.l + i / (idx.length - 1) * (W - m.l - m.r), y = v => m.t + (y1 - v) / (y1 - y0) * (Hh - m.t - m.b);
+  let g = '';
+  for (let v = .8; v <= 1.101; v += .1) g += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="#ddd5c6"/><text x="${m.l-10}" y="${y(v)+7}" text-anchor="end" font-size="20" fill="#777">${v.toFixed(1)}</text>`;
+  idx.forEach((d, i) => { if (d[0].endsWith('Q1') && +d[0].slice(0,4) % 2 === 0) g += `<text x="${x(i)}" y="${Hh-8}" text-anchor="middle" font-size="20" fill="#777">${d[0].slice(0,4)}</text>`; });
+  const pk = ys.indexOf(Math.max(...ys)), last = idx.length - 1;
+  g += `<path id="lp" d="M${idx.map((d, i) => x(i) + ',' + y(d[1])).join('L')}" fill="none" stroke="#2f7bff" stroke-width="7" style="filter:drop-shadow(0 0 8px rgba(47,123,255,.7))" stroke-linejoin="round" stroke-linecap="round"/>`;
+  g += `<g id="pk" opacity="0"><circle cx="${x(pk)}" cy="${y(ys[pk])}" r="11" fill="#d64545" stroke="#f4efe4" stroke-width="4"/><text x="${x(pk)-16}" y="${y(ys[pk])-22}" text-anchor="end" font-size="26" font-weight="800" fill="#111">Peak · early 2026</text></g>`;
+  g += `<g id="dn" opacity="0"><circle cx="${x(last)}" cy="${y(ys[last])}" r="11" fill="#2f7bff" stroke="#f4efe4" stroke-width="4"/><text x="${x(last)-6}" y="${y(ys[last])+52}" text-anchor="end" font-size="34" font-weight="800" fill="#d64545">${(D.from_peak*100).toFixed(1).replace('-', '−')}%</text></g>`;
+  s.innerHTML = g; })();
+const lp = $('lp'), lpLen = lp.getTotalLength(); lp.style.strokeDasharray = lpLen;
+
+/* ---------- captions ---------- */
+const TIMING = /*TIMING*/null;
+const CAPS = TIMING.caps;  // caption windows follow the voice (see make_voice.py)
+// each scene is designed on a fixed timeline; stretch it to where the voice puts it
+const DESIGN = [0, 4, 8, 16, 23, 30, 37, 41.1, 44.5], OUTB = [...TIMING.scenes, 44.5];
+function warp(t){ let i = 0; while (i < OUTB.length - 2 && t >= OUTB[i + 1]) i++;
+  return DESIGN[i] + (t - OUTB[i]) / (OUTB[i + 1] - OUTB[i]) * (DESIGN[i + 1] - DESIGN[i]); }
+let capIx = -1;
+function captions(t){ const c = $('cap'); const i = CAPS.findIndex(x => t >= x[0] && t < x[1]);
+  if (i !== capIx) { capIx = i; c.innerHTML = i < 0 ? '' : CAPS[i][2].split(' ').map(w => `<span class="${CAPS[i][3].includes(w) ? 'hl' : ''}">${w}</span>`).join(' '); }
+  if (i < 0) { c.style.opacity = 0; return; }
+  const [a, b] = CAPS[i], sp = c.querySelectorAll('span'), n = sp.length, per = Math.min(.32, (b - a) * .6 / n);
+  sp.forEach((s, j) => s.classList.toggle('on', t >= a + j * per));
+  c.style.opacity = t > b - .15 ? (b - t) / .15 : 1; c.style.transform = 'none'; c.style.display = '';
+}
+
+/* ---------- map ---------- */
+const cv = $('map'), ctx = cv.getContext('2d');
+const B = D.buildings; // lat, lon, flats, median, tier
+const kx = Math.cos(-33.89 * Math.PI / 180);
+let la0 = 1e9, la1 = -1e9, lo0 = 1e9, lo1 = -1e9;
+D.suburbs.forEach(s => s.rings.forEach(r => r.forEach(([lo, la]) => { la0 = Math.min(la0, la); la1 = Math.max(la1, la); lo0 = Math.min(lo0, lo); lo1 = Math.max(lo1, lo); })));
+const CITY = {lon: (lo0 + lo1)/2, lat: (la0 + la1)/2, z: 1000 / ((lo1 - lo0) * kx)};
+const HERO = {lon: H[3], lat: H[2], z: 62000};
+const meds = B.map(b => Math.log(b[3])).sort((a, b) => a - b), q = [1,2,3,4,5,6].map(i => meds[Math.floor(i/7*meds.length)]);
+const qi = v => { const l = Math.log(v); let i = 0; while (i < 6 && l > q[i]) i++; return i; };
+const RAMP = ['#2b6cff', '#3f86ff', '#5aa0ff', '#7db8ff', '#a6d0ff', '#d6eaff', '#fff1c9'];
+const subVals = D.suburbs.map(s => s.value).filter(Boolean).sort((a, b) => a - b);
+const subQ = v => { if (!v) return -1; const r = subVals.indexOf(v) / (subVals.length - 1); return Math.min(6, Math.floor(r * 7)); };
+const SUBFILL = ['#173a7a', '#1d4c9a', '#245fba', '#2f74d6', '#4a8ced', '#6eaaff', '#9cc8ff'];
+const dist = B.map(b => Math.hypot((b[1] - CITY.lon) * kx, b[0] - CITY.lat));
+const dmax = Math.max(...dist);
+const CAM = [[0, CITY, 1.0], [3.6, CITY, 1.06], [8.0, CITY, 1.08], [10.2, HERO, 1], [15.8, HERO, 1.08], [17.6, CITY, 1.0], [44.5, CITY, 1.05]];
+function camera(t){ let i = 0; while (i < CAM.length - 2 && t >= CAM[i+1][0]) i++;
+  const [ta, A, sa] = CAM[i], [tb, Bc, sb] = CAM[i+1], k = ease(clamp((t - ta)/(tb - ta)));
+  const za = A.z * sa, zb = Bc.z * sb, z = Math.exp(lerp(Math.log(za), Math.log(zb), k));
+  return {lon: lerp(A.lon, Bc.lon, k), lat: lerp(A.lat, Bc.lat, k), z}; }
+const CX = 540, CY = 760;
+const sprites = {};
+function glow(color){ if (sprites[color]) return sprites[color];
+  const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+  const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, color); gr.addColorStop(.25, color + 'aa'); gr.addColorStop(1, color + '00');
+  g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return sprites[color] = c; }
+function drawMap(t){
+  const c = camera(t), P = (lo, la) => [CX + (lo - c.lon) * kx * c.z, CY - (la - c.lat) * c.z];
+  ctx.globalCompositeOperation = 'source-over'; ctx.shadowBlur = 0;
+  ctx.fillStyle = '#04070e'; ctx.fillRect(0, 0, 1080, 1920);
+  const sky = ctx.createRadialGradient(540, 760, 0, 540, 760, 950); sky.addColorStop(0, 'rgba(40,90,190,.22)'); sky.addColorStop(1, 'rgba(4,7,14,0)');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, 1080, 1920);
+  const subMode = clamp((t - 23.2)/1.2) * (1 - clamp((t - 29.6)/.6));
+  const focus = clamp((t - 9.4)/.8) * (1 - clamp((t - 15.8)/.8));
+  const path = s => { ctx.beginPath(); s.rings.forEach(r => r.forEach(([lo, la], j) => { const p = P(lo, la); j ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); })); };
+  // suburb fills (buyers scene) and Zetland focus
+  D.suburbs.forEach(s => { const qv = subQ(s.value), isZ = s.name === 'Zetland';
+    if (subMode > 0 && qv >= 0) { path(s); ctx.globalAlpha = .8 * subMode; ctx.fillStyle = SUBFILL[qv]; ctx.fill(); }
+    if (isZ && focus > 0) { path(s); ctx.globalAlpha = .4 * focus; ctx.fillStyle = '#2f7bff'; ctx.fill(); } });
+  // glowing suburb outlines
+  ctx.globalAlpha = 1; ctx.shadowColor = 'rgba(90,160,255,.9)'; ctx.shadowBlur = 14;
+  D.suburbs.forEach(s => { const isZ = s.name === 'Zetland' && focus > 0; path(s);
+    ctx.strokeStyle = isZ ? `rgba(255,255,255,${.5 + .5 * focus})` : 'rgba(130,185,255,.6)'; ctx.lineWidth = isZ ? 2.5 + 3 * focus : 2; ctx.stroke(); });
+  ctx.shadowBlur = 0;
+  if (subMode > .05) { ctx.font = '700 23px InterV'; ctx.textAlign = 'center'; ctx.fillStyle = `rgba(255,255,255,${.95 * subMode})`; ctx.shadowColor = 'rgba(0,0,0,.8)'; ctx.shadowBlur = 6;
+    D.suburbs.forEach(s => { if (!['Sydney', 'Surry Hills', 'Waterloo', 'Zetland', 'Pyrmont', 'Redfern', 'Glebe', 'Potts Point', 'Alexandria', 'Barangaroo'].includes(s.name)) return;
+      let ax = 0, ay = 0, n = 0; s.rings[0].forEach(([lo, la]) => { ax += lo; ay += la; n++; }); const p = P(ax/n, ay/n); ctx.fillText(s.name, p[0], p[1]); });
+    ctx.shadowBlur = 0; }
+  if (focus > 0) { ctx.strokeStyle = `rgba(190,220,255,${.5 * focus})`; ctx.lineWidth = 1.4;
+    D.zetland_mb.forEach(r => { ctx.beginPath(); r.forEach(([lo, la], j) => { const p = P(lo, la); j ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }); ctx.closePath(); ctx.stroke(); }); }
+  // buildings as city lights: soft halo + bright core, added together
+  const reveal = clamp(t / 2.4), zf = Math.sqrt(c.z / CITY.z);
+  const dim = 1 - .7 * clamp((t - 4.0)/.6) * (1 - clamp((t - 7.6)/.6)) - .45 * subMode - .5 * clamp((t - 37)/.6);
+  const tierMix = clamp((t - 30.3)/1.0) * (1 - clamp((t - 36.8)/.6));
+  const TC = ['#ff8a3d', '#cfe4ff', '#4da3ff'];
+  const twinkle = i => .85 + .15 * Math.sin(t * 2.2 + i * 1.7);
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < B.length; i++) { const d = dist[i] / dmax; if (d > reveal * 1.02) continue; const b = B[i], p = P(b[1], b[0]);
+    if (p[0] < -40 || p[0] > 1120 || p[1] < -40 || p[1] > 1960) continue;
+    const pop = clamp((reveal * 1.02 - d) * 12), col = tierMix > .5 ? TC[b[4]] : RAMP[qi(b[3])];
+    const r = (1.7 + Math.min(4, Math.sqrt(b[2]) / 4)) * zf, a = Math.max(.35, dim) * pop * twinkle(i);
+    const hs = r * 7; ctx.globalAlpha = .55 * a; ctx.drawImage(glow(col), p[0] - hs/2, p[1] - hs/2, hs, hs);
+    ctx.globalAlpha = a; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, 7); ctx.fill(); }
+  ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+  const hr = clamp((t - 10.3)/.5) * (1 - clamp((t - 15.8)/.5));
+  if (hr > 0) { const p = P(H[3], H[2]), pulse = (t * 1.3) % 1;
+    ctx.globalAlpha = hr; ctx.drawImage(glow('#ffc23d'), p[0] - 60, p[1] - 60, 120, 120); ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.arc(p[0], p[1], 18 + 40 * pulse, 0, 7); ctx.strokeStyle = `rgba(255,230,170,${hr * (1 - pulse)})`; ctx.lineWidth = 4; ctx.stroke();
+    ctx.beginPath(); ctx.arc(p[0], p[1], 15, 0, 7); ctx.fillStyle = `rgba(255,200,60,${hr})`; ctx.fill();
+    ctx.font = '800 30px InterV'; ctx.textAlign = 'left'; ctx.fillStyle = `rgba(255,255,255,${hr})`; ctx.shadowColor = 'rgba(0,0,0,.9)'; ctx.shadowBlur = 8; ctx.fillText(H[0], p[0] + 30, p[1] - 22); ctx.shadowBlur = 0; }
+}
+
+/* ---------- series header ---------- */
+const SER = [[8.0, 16.0, '01', 'The trick'], [16.0, 23.0, '02', 'The proof'], [23.0, 30.0, '03', 'For buyers'], [30.0, 37.0, '04', 'For lenders']];
+function series(t){ const s = SER.find(x => t >= x[0] && t < x[1]); const el = $('series');
+  if (!s) { show(el, t, 99, 100); return; }
+  $('sIx').textContent = s[2]; $('sTt').textContent = s[3]; $('sCt').textContent = s[2] + ' / 04';
+  show(el, t, s[0], s[1], .35, .25, 20); }
+
+/* ---------- render ---------- */
+window.render = tOut => { const t = warp(tOut);
+  drawMap(t);
+  show($('logo'), t, 0, 41.0, .4, .5, 0); show($('pill'), t, .2, 41.0, .4, .5, 0); show($('src'), t, 0, 41.0, .4, .5, 0);
+  series(t);
+  show($('cardHook'), t, 1.0, 4.0);
+  const tk = show($('title'), t, 4.2, 8.0, .5, .4, 30);
+  $('cnt').textContent = Math.round(181711 * easeOut(clamp((t - 4.6)/1.8))).toLocaleString('en-AU');
+  show($('cardTrick'), t, 10.6, 16.0); setBars('hBars', hB, t, 11.4);
+  show($('cardProof'), t, 17.4, 23.0); setBars('pBars', pB, t, 18.6);
+  show($('cardBuy'), t, 24.4, 30.0); setBars('bBars', bB, t, 26.6);
+  show($('cardBank'), t, 31.0, 37.0); setBars('kBars', kB, t, 32.0);
+  show($('chart'), t, 37.2, 41.2);
+  lp.style.strokeDashoffset = lpLen * (1 - ease(clamp((t - 37.6)/1.8)));
+  $('pk').setAttribute('opacity', clamp((t - 38.6)/.4)); $('dn').setAttribute('opacity', clamp((t - 39.4)/.4));
+  const ch = show($('chips'), t, 41.2, 43.0, .4, .3, 30);
+  $('chips').querySelectorAll('.chip').forEach((c, i) => { const k = easeOut(clamp((t - 41.2 - i * .22)/.4)); c.style.opacity = k; c.style.transform = `translateY(${(1 - k) * 30}px)`; });
+  show($('end'), t, 42.9, 99, .5, .1, 0);
+  captions(tOut);
+};
+render(0);
+</script>
+</body></html>

@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Every Flat Valued</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f6f4ef; --surface:#fcfcfb; --surface-2:#efece5; --line:#e2ded4;
+  --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#8a8880;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
+  --q2:#9ec5f4; --q4:#3987e5; --q6:#184f95;
+  --band:rgba(42,120,214,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 30px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme:dark;
+    --bg:#121211; --surface:#1a1a19; --surface-2:#232321; --line:#30302d;
+    --ink:#f0efec; --ink-2:#c3c2b7; --ink-3:#8f8e86;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+    --q2:#184f95; --q4:#2a78d6; --q6:#86b6ef;
+    --band:rgba(57,135,229,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 30px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#121211; --surface:#1a1a19; --surface-2:#232321; --line:#30302d;
+  --ink:#f0efec; --ink-2:#c3c2b7; --ink-3:#8f8e86;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+  --q2:#184f95; --q4:#2a78d6; --q6:#86b6ef;
+  --band:rgba(57,135,229,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 30px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+h1,h2{font-family:Fraunces,Georgia,serif;font-weight:700;letter-spacing:-.01em;line-height:1.1;margin:0}
+h2{font-size:clamp(1.8rem,3.8vw,2.6rem)}
+h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.35}
+p{margin:0}
+.eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-3);font-weight:600}
+.lede{color:var(--ink-2);font-size:1.08rem;max-width:64ch;margin-top:12px}
+.muted{color:var(--ink-3)}
+section.wrap{padding:80px 16px 10px}
+nav.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;gap:18px;align-items:center;height:54px;overflow-x:auto;white-space:nowrap}
+nav.top a{color:var(--ink-2);text-decoration:none;font-size:.9rem;font-weight:500}
+nav.top a:hover{color:var(--ink)}
+nav.top .brand{font-family:Fraunces,serif;font-weight:700;color:var(--ink);margin-right:auto}
+.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:4px 10px;font:inherit;font-size:.82rem;cursor:pointer}
+
+.hero{padding:80px 0 30px}
+.hero h1{font-size:clamp(2.4rem,7vw,4.4rem);max-width:15ch}
+.hero h1 em{font-style:normal;color:var(--s1)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:36px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+.kpi .n{font-family:Fraunces,serif;font-size:clamp(1.8rem,4vw,2.4rem);font-weight:700;line-height:1;display:block;font-variant-numeric:tabular-nums}
+.kpi .l{color:var(--ink-2);font-size:.88rem;margin-top:8px;display:block}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+.card .sub{color:var(--ink-3);font-size:.86rem;margin:0 0 12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}.grid4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.grid4{grid-template-columns:1fr}}
+
+/* data story rows */
+.story{display:grid;grid-template-columns:5fr 6fr;gap:28px;align-items:center;padding:34px 0;border-top:1px solid var(--line)}
+.story:first-of-type{border-top:0}
+@media (max-width:860px){.story{grid-template-columns:1fr;gap:16px}}
+.story .num{font-family:Fraunces,serif;font-weight:700;color:var(--s1);font-size:1rem}
+.story h3{font-family:Fraunces,serif;font-size:1.55rem;font-weight:700;margin:4px 0 10px}
+.story p{color:var(--ink-2)}
+.so{margin-top:14px;background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.94rem;color:var(--ink)}
+.so b{color:var(--s1)}
+
+/* insight cards */
+.ins .big{font-family:Fraunces,serif;font-weight:700;font-size:2.2rem;line-height:1;font-variant-numeric:tabular-nums}
+.ins p{color:var(--ink-2);font-size:.93rem;margin-top:8px}
+
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.flow .st{position:relative;background:var(--surface-2);border-radius:14px;padding:16px}
+.flow .st:not(:last-child)::after{content:"\2192";position:absolute;right:-12px;top:18px;color:var(--ink-3);font-size:1rem;z-index:1}
+.flow .hd{display:flex;align-items:center;gap:10px;font-weight:600;white-space:nowrap}
+.flow .n{width:26px;height:26px;border-radius:8px;background:var(--s1);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex:none}
+.flow p{color:var(--ink-2);font-size:.88rem;margin-top:8px;line-height:1.5}
+.inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:0 24px;margin-top:20px}
+.inp{display:flex;flex-direction:column;padding:10px 0;border-top:1px solid var(--line);font-size:.88rem}
+.inp b{font-weight:600}.inp span{color:var(--ink-2)}
+@media (max-width:860px){.flow,.inputs{grid-template-columns:1fr 1fr}.flow .st::after{display:none}}
+@media (max-width:480px){.flow,.inputs{grid-template-columns:1fr}}
+.why{margin:0;padding-left:18px;color:var(--ink-2)}.why li{margin:10px 0}.why b{color:var(--ink)}
+.concl{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
+.ci{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--s1);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.ci .k{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);font-weight:600}
+.ci p{color:var(--ink-2);font-size:.92rem;margin-top:8px}.ci b{color:var(--ink)}
+@media (max-width:860px){.concl{grid-template-columns:1fr 1fr}}@media (max-width:480px){.concl{grid-template-columns:1fr}}
+.tryrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center;font-size:.84rem;color:var(--ink-3)}
+.tryrow button{border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:4px 12px;font:inherit;font-size:.82rem;cursor:pointer}
+.tryrow button:hover{border-color:var(--s1);color:var(--ink)}
+.sales{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+.sales h4{margin:0 0 2px;font-size:.98rem}
+.sale{display:grid;grid-template-columns:150px 1fr 74px;gap:12px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:.86rem}
+.sale .u b{display:block;font-weight:600}.sale .u span{color:var(--ink-3);font-size:.78rem}
+.pair{display:flex;flex-direction:column;gap:4px}
+.pb{display:grid;grid-template-columns:62px 1fr 64px;gap:8px;align-items:center;font-size:.78rem;color:var(--ink-3)}
+.pb .t{height:10px;background:var(--surface-2);border-radius:5px;overflow:hidden}.pb .f{height:100%;border-radius:5px;width:0;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.pb .v{color:var(--ink);font-variant-numeric:tabular-nums;text-align:right}
+.gap{font-weight:700;font-size:.82rem;text-align:center;border-radius:999px;padding:3px 0;font-variant-numeric:tabular-nums}
+.gap.ok{background:rgba(27,175,122,.15);color:#13855c}.gap.off{background:rgba(235,104,52,.14);color:#c4501f}
+@media (max-width:560px){.sale{grid-template-columns:1fr 64px}.sale .pair{grid-column:1/-1;grid-row:2}}
+.modelline{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.modelline span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.88rem;color:var(--ink-2)}
+.modelline span b{color:var(--ink)}
+.lk{display:grid;grid-template-columns:5fr 6fr;gap:18px;margin-top:22px;align-items:start}
+@media (max-width:900px){.lk{grid-template-columns:1fr}}
+.lkf .fl{margin-top:14px}.lkf .fl label{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600;margin-bottom:6px}
+.lkf select{width:100%;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:.9rem}
+.lkf .seg-c button{font-size:.8rem;padding:5px 10px}
+.chk{display:flex;gap:8px;align-items:center;font-size:.88rem;color:var(--ink-2);margin-top:14px;cursor:pointer}
+.lkh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;padding-top:12px;border-top:1px solid var(--line);font-size:.86rem;color:var(--ink-3)}
+.lkh select{width:auto;padding:5px 10px;font-size:.82rem}
+.lkl{margin-top:8px;max-height:380px;overflow:auto;margin-right:-8px;padding-right:8px}
+.lkr{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+.lkr:hover{background:var(--surface-2)}.lkr.on{background:var(--surface-2);border-color:var(--s1)}
+.lkr b{font-weight:600;font-size:.92rem}.lkr .p{font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.lkr small{color:var(--ink-3);font-size:.78rem}.lkr small.r{text-align:right}
+.bcard{position:sticky;top:70px}
+.beds{display:grid;gap:14px;margin:14px 0 16px}
+.bed .bt{display:flex;justify-content:space-between;align-items:baseline}
+.bed .bt span{color:var(--ink-2);font-size:.9rem}.bed .bt b{font-family:Fraunces,serif;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.bed .trk{position:relative;height:12px;background:var(--surface-2);border-radius:6px;margin-top:6px}
+.bed .fil{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,var(--q4),var(--s1));width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.bed .mk{position:absolute;top:-4px;bottom:-4px;width:3px;border-radius:2px;background:var(--ink);opacity:.75}
+.bed .cmp{font-size:.78rem;color:var(--ink-3);margin-top:5px}
+.bed .cmp b{font-weight:600}.bed .cmp b.up{color:#13855c}.bed .cmp b.dn{color:#c4501f}
+.bed.na b{color:var(--ink-3)}
+.lgd{display:flex;gap:16px;font-size:.76rem;color:var(--ink-3);margin-top:-4px}
+.lgd i{display:inline-block;width:14px;height:8px;border-radius:4px;background:var(--s1);margin-right:6px;vertical-align:middle}
+.lgd i.m{width:3px;height:12px;background:var(--ink);opacity:.75;border-radius:2px}
+/* steps */
+.step .n{width:34px;height:34px;border-radius:10px;background:var(--s1);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:12px}
+.step p{color:var(--ink-2);font-size:.92rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{background:var(--surface-2);border-radius:999px;padding:5px 12px;font-size:.84rem;color:var(--ink-2)}
+.chip b{color:var(--ink);font-weight:600}
+
+/* timeline */
+.tl{position:relative;height:74px;margin:22px 0 8px}
+.tl .seg{position:absolute;top:18px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.84rem;font-weight:600;white-space:nowrap;overflow:hidden;transition:left .7s cubic-bezier(.2,.8,.2,1),width .7s cubic-bezier(.2,.8,.2,1)}
+.tl .tr{background:var(--q2);color:var(--ink)}
+.tl .te{background:var(--s2);color:#fff}
+.tl .ax{position:absolute;top:62px;font-size:.75rem;color:var(--ink-3);transform:translateX(-50%)}
+.tl .mk{position:absolute;top:0;font-size:.75rem;font-weight:600;color:var(--ink);transform:translateX(-100%);transition:left .7s cubic-bezier(.2,.8,.2,1);white-space:nowrap}
+
+/* controls */
+.seg-c{display:inline-flex;background:var(--surface-2);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg-c button{border:0;background:transparent;color:var(--ink-2);font:inherit;font-size:.84rem;font-weight:600;padding:6px 12px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
+.seg-c button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.ctrls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+
+/* bars */
+.hbars{position:relative}
+.hrow{position:absolute;left:0;right:0;display:grid;grid-template-columns:130px 1fr 70px;align-items:center;gap:10px;height:24px;transition:top .6s cubic-bezier(.2,.8,.2,1);font-size:.84rem}
+.hrow.st{position:relative;margin-bottom:10px;grid-template-columns:200px 1fr 64px;height:26px}
+.hrow .nm{color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.hrow .tr{position:relative;height:14px}
+.hrow .br{position:absolute;left:0;top:0;bottom:0;background:var(--s1);border-radius:0 4px 4px 0;width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.hrow .vl{font-variant-numeric:tabular-nums;font-weight:600}
+@media (max-width:560px){.hrow{grid-template-columns:96px 1fr 60px}.hrow.st{grid-template-columns:120px 1fr 56px}}
+.vbars{display:flex;align-items:flex-end;gap:10px;height:210px;padding-top:26px}
+.vbar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;min-width:0}
+.vbar .col{width:100%;max-width:62px;background:var(--s1);border-radius:4px 4px 0 0;height:0;transition:height 1s cubic-bezier(.2,.8,.2,1)}
+.vbar .v{font-weight:600;font-variant-numeric:tabular-nums;font-size:.92rem}
+.vbar .k{font-size:.78rem;color:var(--ink-3);text-align:center;line-height:1.25;min-height:2.5em}
+.vbar.base .col{background:var(--q2)}
+.mini{display:flex;align-items:flex-end;gap:3px;height:150px;padding-top:10px}
+.mini div{flex:1;background:var(--s1);border-radius:3px 3px 0 0;height:0;transition:height .9s cubic-bezier(.2,.8,.2,1)}
+.mini div.old{background:var(--q2)}
+.miniax{display:flex;justify-content:space-between;font-size:.75rem;color:var(--ink-3);margin-top:6px}
+svg text{fill:var(--ink-3);font:11px Inter,system-ui,sans-serif}
+.draw{transition:stroke-dashoffset 2s cubic-bezier(.4,0,.2,1)}
+
+/* metric explainers */
+.met .big{font-family:Fraunces,serif;font-weight:700;font-size:2.3rem;line-height:1;color:var(--s1);font-variant-numeric:tabular-nums}
+.met h3{margin-top:10px}
+.met p{color:var(--ink-2);font-size:.9rem}
+.met .both{font-size:.8rem;color:var(--ink-3);margin-top:8px}
+
+#tip{position:fixed;pointer-events:none;z-index:50;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:10px;padding:8px 11px;font-size:.84rem;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s;max-width:270px}
+#tip.on{opacity:1;transform:none}
+#tip b{display:block;font-weight:600}
+#tip .r{display:flex;justify-content:space-between;gap:14px;color:var(--ink-2)}
+#tip .r span:last-child{color:var(--ink);font-variant-numeric:tabular-nums}
+
+.search{position:relative}
+.search input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
+.search input:focus{outline:2px solid var(--s1);outline-offset:1px}
+.sugg{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:10;max-height:260px;overflow:auto;display:none}
+.sugg div{padding:9px 12px;cursor:pointer;font-size:.9rem}
+.sugg div:hover,.sugg div.act{background:var(--surface-2)}
+.sugg small{color:var(--ink-3)}
+.bcard{margin-top:16px}
+.bcard .addr{font-family:Fraunces,serif;font-size:1.4rem;font-weight:700}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--surface-2);color:var(--ink-2)}
+.dots{display:inline-flex;gap:3px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.dots i.f{background:var(--s1)}
+
+.rv{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}}
+
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px 18px;margin-bottom:10px}
+details summary{cursor:pointer;font-weight:600;padding:12px 0;list-style:none;display:flex;justify-content:space-between}
+details summary::after{content:"+";color:var(--ink-3);font-size:1.2rem;line-height:1}
+details[open] summary::after{content:"\2212"}
+details p,details li{color:var(--ink-2);font-size:.93rem}
+details p{margin-bottom:10px}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+.tscroll{overflow-x:auto}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--ink-3);font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+footer{margin-top:60px;padding:40px 0 60px;color:var(--ink-3);font-size:.85rem;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<nav class="top"><div class="wrap">
+  <span class="brand">FableAndAstra</span>
+  <a href="#data">The data</a><a href="#insights">Insights</a><a href="#model">The model</a><a href="#results">Results</a><a href="#conclusion">Conclusion</a><a href="#lookup">Look up</a><a href="#details">Details</a>
+  <button class="theme-btn" id="themeBtn" aria-label="Switch colour theme">◐ Theme</button>
+</div></nav>
+
+<header class="hero wrap">
+  <div class="eyebrow rv">Microburbs Hackathon · Task 5 · Team FableAndAstra</div>
+  <h1 class="rv" style="margin-top:14px">A price for <em>every</em> flat in the City of Sydney.</h1>
+  <p class="lede rv">We valued all 181,711 flats as at 31 August 2026. Here is what the data showed, how the model works, and how well it does.</p>
+  <div class="kpis">
+    <div class="kpi rv"><span class="n" data-count="181711" data-fmt="int">0</span><span class="l">flats valued, none left blank</span></div>
+    <div class="kpi rv"><span class="n" data-count="__W10__" data-fmt="pct">0</span><span class="l">of test sales priced within 10%</span></div>
+    <div class="kpi rv"><span class="n" data-count="__MAE__" data-fmt="k">0</span><span class="l">typical miss on a flat</span></div>
+    <div class="kpi rv"><span class="n" data-count="__LIFT__" data-fmt="x">0</span><span class="l">as often within 10% as a suburb median</span></div>
+  </div>
+</header>
+
+<!-- ================= 1. DATA ================= -->
+<section id="data" class="wrap">
+  <div class="eyebrow rv">Part 1</div>
+  <h2 class="rv" style="margin-top:8px">What the data told us</h2>
+  <p class="lede rv">Five findings. Each one shaped the model.</p>
+
+  <div class="story rv">
+    <div><div class="num">01</div><h3>Most flats have never sold.</h3>
+      <p>Only <span id="dSold"></span> of addresses have a sale on record. For the rest there is no past price to look up.</p>
+      <div class="so">So we <b>learn from the building and street</b>, not just the flat.</div></div>
+    <div class="card"><h3>Addresses with a past sale</h3><p class="sub">All 181,711 addresses</p><div id="cSold"></div></div>
+  </div>
+
+  <div class="story rv">
+    <div><div class="num">02</div><h3>Bedroom counts are patchy.</h3>
+      <p>Sales before 2010 never record bedrooms, and <span id="dBedIn"></span> of the flats we value have none.</p>
+      <div class="so">So we <b>filled gaps from the Microburbs API</b> (missing drops to <span id="dBedApi"></span>) and <b>start in 2010</b>.</div></div>
+    <div class="card"><h3>Sales with a bedroom count</h3><p class="sub">Share by year. Hover for sales counts.</p><div class="mini" id="cBeds"></div><div class="miniax"><span>2005</span><span>2010</span><span>2015</span><span>2020</span><span>2026</span></div></div>
+  </div>
+
+  <div class="story rv">
+    <div><div class="num">03</div><h3>Old sales still matter.</h3>
+      <p>Over half of last year's sales had sold before, often a decade ago. That old price is a strong clue once it's brought up to date.</p>
+      <div class="so">So we <b>keep sales back to 2010</b> and <b>adjust every price to today</b>.</div></div>
+    <div class="card"><h3>When last year's flats last sold</h3><p class="sub">Flats sold Sep 2025 to Aug 2026</p><div class="vbars" id="cAge"></div></div>
+  </div>
+
+  <div class="story rv">
+    <div><div class="num">04</div><h3>The market turned in 2026.</h3>
+      <p>Prices rose <span id="dRise"></span> from 2016 to a February 2026 peak, dipped in May and June, then held steady.</p>
+      <div class="so">So we <b>price at the July and August level</b> and <b>trim 2%</b> to avoid reading high after the turn.</div></div>
+    <div class="card"><div class="ctrls"><h3 style="margin:0 auto 0 0">Flat price index</h3>
+      <div class="seg-c" id="idxSeg"><button aria-pressed="true" data-v="long">Since 2010</button><button aria-pressed="false" data-v="month">Last 20 months</button></div></div>
+      <p class="sub" id="idxSub"></p><div id="cIdx"></div></div>
+  </div>
+
+  <div class="story rv">
+    <div><div class="num">05</div><h3>No single clue is enough.</h3>
+      <p>Priced with one clue alone, at best half the flats land within 10%. Each clue is right where the others are wrong.</p>
+      <div class="so">So we <b>let a model combine them</b>, which lifts the hit rate past 70%.</div></div>
+    <div class="card"><h3>Within 10%, by clue</h3><p class="sub">Test sales Sep 2025 to Aug 2026</p><div id="cAnch"></div></div>
+  </div>
+</section>
+
+<!-- ================= KEY INSIGHTS ================= -->
+<section id="insights" class="wrap">
+  <div class="eyebrow rv">Key insights</div>
+  <h2 class="rv" style="margin-top:8px">What it means for buyers and lenders</h2>
+  <div class="grid4" style="margin-top:24px">
+    <div class="card ins rv"><div class="big" id="iPeak"></div><h3 style="margin-top:10px">Off the peak</h3><p>Prices sit below the early 2026 high. Buyers can negotiate.</p></div>
+    <div class="card ins rv"><div class="big" id="iPark"></div><h3 style="margin-top:10px">A car space pays</h3><p>One space adds about <span id="iPark2"></span> to a typical 2-bed.</p></div>
+    <div class="card ins rv"><div class="big" id="iFloor"></div><h3 style="margin-top:10px">Height helps a little</h3><p>Floors 11 to 20 beat the lowest floors. The gain stops above 20.</p></div>
+    <div class="card ins rv"><div class="big" id="iTier"></div><h3 style="margin-top:10px">Desk-ready</h3><p>Half of all flats have enough evidence for a desktop valuation.</p></div>
+  </div>
+  <div class="card rv" style="margin-top:18px">
+    <div class="ctrls"><h3 style="margin:0 auto 0 0">What a flat costs, suburb by suburb</h3>
+      <div class="seg-c" id="bedSeg"><button aria-pressed="true" data-b="all">All</button><button aria-pressed="false" data-b="b1">1 bed</button><button aria-pressed="false" data-b="b2">2 bed</button><button aria-pressed="false" data-b="b3">3 bed</button></div>
+      <div class="seg-c" id="sortSeg"><button aria-pressed="true" data-s="price">Price</button><button aria-pressed="false" data-s="growth">Growth</button></div></div>
+    <p class="sub" id="ladderSub"></p>
+    <div class="hbars" id="ladder"></div>
+  </div>
+</section>
+
+<!-- ================= 2. MODEL ================= -->
+<section id="model" class="wrap">
+  <div class="eyebrow rv">Part 2</div>
+  <h2 class="rv" style="margin-top:8px">How the model works</h2>
+  <div class="card rv" style="margin-top:24px">
+    <div class="flow">
+      <div class="st"><div class="hd"><span class="n">1</span>Adjust to today</div><p>Flats that sold twice show how prices moved each quarter.</p></div>
+      <div class="st"><div class="hd"><span class="n">2</span>Gather clues</div><p>Earlier sales of the flat, its building, its block and suburb.</p></div>
+      <div class="st"><div class="hd"><span class="n">3</span>Add details</div><p>Bedrooms, parking, floor and location, gaps filled from the API.</p></div>
+      <div class="st"><div class="hd"><span class="n">4</span>Combine</div><p>A tree model weighs every clue. Three runs averaged, 2% trim.</p></div>
+    </div>
+    <div class="inputs">
+      <div class="inp"><b>Own history</b><span>Last sale, years since</span></div>
+      <div class="inp"><b>Building</b><span>Average past price, same bedrooms</span></div>
+      <div class="inp"><b>Area</b><span>Mesh block, suburb, suburb by bedrooms</span></div>
+      <div class="inp"><b>Flat</b><span>Bedrooms, bathrooms, parking, floor</span></div>
+      <div class="inp"><b>Place</b><span>Location, block type, building size</span></div>
+      <div class="inp"><b>Growth</b><span>Homes and people in the block, 2021 and 2026</span></div>
+    </div>
+    <p class="muted" style="font-size:.84rem;margin-top:14px">Not used: advertised prices, since most flats were never advertised.</p>
+  </div>
+
+  <div class="card rv" style="margin-top:18px">
+    <div class="ctrls"><h3 style="margin:0 auto 0 0">Training and testing</h3>
+      <div class="seg-c" id="splitSeg"><button aria-pressed="true" data-c="2026-03-01">Test from Mar 2026</button><button aria-pressed="false" data-c="2025-09-01">Test from Sep 2025</button></div></div>
+    <p class="sub">The model only sees sales before the split. We then check it against real sales after it.</p>
+    <div class="tl" id="tl"></div>
+    <div class="grid2" style="margin-top:16px;gap:12px">
+      <p style="color:var(--ink-2)"><b style="color:var(--ink)">Train:</b> <span id="trN"></span> sales from 2010 to the split.</p>
+      <p style="color:var(--ink-2)"><b style="color:var(--ink)">Test:</b> <span id="teN"></span> later sales under $1.2m, no shops, as the judges do.</p>
+    </div>
+  </div>
+
+  <div class="card rv" style="margin-top:18px">
+    <div class="grid2" style="align-items:center">
+      <div><h3>Choosing the time window</h3><p class="sub">Within 10%, test from Sep 2025</p><div class="vbars" id="cWin"></div></div>
+      <div><ul class="why">
+        <li><b>Before 2010 hurts.</b> No bedroom counts, and prices from a different market.</li>
+        <li><b>After 2018 only hurts more.</b> Many flats last sold in the early 2010s.</li>
+        <li><b>Other settings barely matter.</b> Under one point of difference.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3. RESULTS ================= -->
+<section id="results" class="wrap">
+  <div class="eyebrow rv">Part 3</div>
+  <h2 class="rv" style="margin-top:8px">How well it works</h2>
+  <p class="lede rv">Main test from March 2026. The second test agrees.</p>
+  <div class="grid4" style="margin-top:24px">
+    <div class="card met rv"><div class="big" id="mW10"></div><h3>Within 10%</h3><p>7 in 10 flats sold within 10% of our value. The judges' score.</p><div class="both" id="mW10b"></div></div>
+    <div class="card met rv"><div class="big" id="mMae"></div><h3>Typical miss</h3><p>Half our values were closer than this. About <span id="mMaeP"></span> of the price.</p><div class="both" id="mMaeb"></div></div>
+    <div class="card met rv"><div class="big" id="mR2"></div><h3>R squared</h3><p>We explain about <span id="mR2p"></span> of why some flats cost more than others.</p><div class="both" id="mR2b"></div></div>
+    <div class="card met rv"><div class="big" id="mBias"></div><h3>Lean</h3><p>Slightly high on a typical flat, and big misses lean high too.</p><div class="both" id="mBiasb"></div></div>
+  </div>
+  <div class="card rv" style="margin-top:18px">
+    <div class="ctrls"><h3 style="margin:0 auto 0 0" id="rTitle"></h3>
+      <div class="seg-c" id="resSeg"><button aria-pressed="true" data-v="base">vs simple methods</button><button aria-pressed="false" data-v="hist">By history</button><button aria-pressed="false" data-v="price">By price</button><button aria-pressed="false" data-v="miss">Size of miss</button><button aria-pressed="false" data-v="dir">Too high or low</button></div></div>
+    <p class="sub" id="rSub"></p>
+    <div class="vbars" id="cRes" style="height:240px"></div>
+    <p id="rNote" style="color:var(--ink-2);margin-top:14px;font-size:.95rem"></p>
+  </div>
+</section>
+
+<!-- ================= CONCLUSION ================= -->
+<section id="conclusion" class="wrap">
+  <div class="eyebrow rv">Conclusion</div>
+  <h2 class="rv" style="margin-top:8px">Every flat, priced, and you can see how sure we are.</h2>
+  <div class="modelline rv"><span><b>Model:</b> LightGBM (gradient-boosted trees)</span><span><b>Target:</b> log sale price, Huber loss</span><span><b>Data:</b> sales from 2010 to 31 Aug 2026</span><span><b>Runs:</b> 3 seeds averaged, values trimmed 2%</span></div>
+  <div class="concl rv">
+    <div class="ci"><span class="k">What we built</span><p>A LightGBM model that values all 181,711 flats at 31 August 2026, with none left blank and an evidence rating for each.</p></div>
+    <div class="ci"><span class="k">What made it work</span><p>Combining every clue instead of trusting one, adjusting old prices to today, and using sales from 2010 only.</p></div>
+    <div class="ci"><span class="k">How good it is</span><p><b id="cW10"></b> of unseen sales within 10%, <b id="cLift"></b> as often as a suburb median, with a typical miss of <b id="cMae"></b>.</p></div>
+    <div class="ci"><span class="k">Where to be careful</span><p>Cheap flats and buildings with little history are weaker, and values lean slightly high after the 2026 dip.</p></div>
+  </div>
+  <div class="card rv" style="margin-top:18px"><span class="k" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);font-weight:600">Next steps</span>
+    <p style="color:var(--ink-2);margin-top:6px">A monthly price index to catch turns faster, which way a flat faces, views blocked by nearby buildings, and nearest sales for buildings with no history.</p></div>
+</section>
+
+<!-- ================= LOOK UP ================= -->
+<section id="lookup" class="wrap">
+  <div class="eyebrow rv">Try it</div>
+  <h2 class="rv" style="margin:8px 0 10px">Look up a building</h2>
+  <p class="lede rv">Search a building to see what its flats are worth today, and how our estimates compared with real sales there.</p>
+  <div class="lk rv">
+    <div class="card lkf">
+      <div class="search"><input id="q" type="search" placeholder="Search a street, e.g. Harris Street" autocomplete="off" aria-label="Search a building"></div>
+      <div class="fl"><label for="fSub">Suburb</label><select id="fSub"><option value="">All suburbs</option></select></div>
+      <div class="fl"><label>Building size</label><div class="seg-c" id="fSize"><button aria-pressed="true" data-v="">Any</button><button aria-pressed="false" data-v="s">Under 20 flats</button><button aria-pressed="false" data-v="m">20 to 99</button><button aria-pressed="false" data-v="l">100+</button></div></div>
+      <div class="fl"><label>Typical flat value</label><div class="seg-c" id="fPrice"><button aria-pressed="true" data-v="">Any</button><button aria-pressed="false" data-v="0-700000">Under $700k</button><button aria-pressed="false" data-v="700000-1000000">$700k to 1m</button><button aria-pressed="false" data-v="1000000-1500000">$1m to 1.5m</button><button aria-pressed="false" data-v="1500000-1e12">$1.5m+</button></div></div>
+      <div class="fl"><label>Evidence</label><div class="seg-c" id="fTier"><button aria-pressed="true" data-v="">Any</button><button aria-pressed="false" data-v="2">High</button><button aria-pressed="false" data-v="1">Medium</button><button aria-pressed="false" data-v="0">Low</button></div></div>
+      <label class="chk"><input type="checkbox" id="fSales"> Only buildings with recent sales to compare</label>
+      <div class="lkh"><span id="lkCount"></span><select id="fSort" aria-label="Sort buildings"><option value="sales">Most recent sales</option><option value="hi">Value, high to low</option><option value="lo">Value, low to high</option><option value="big">Largest first</option></select></div>
+      <div class="lkl" id="lkList"></div>
+    </div>
+    <div class="card bcard" id="bcard"><p class="muted">Pick a building to see its values by bedroom count and its recent sales against our estimate.</p></div>
+  </div>
+</section>
+
+<!-- ================= DETAILS ================= -->
+<section id="details" class="wrap">
+  <div class="eyebrow rv">For the technical reader</div>
+  <h2 class="rv" style="margin:8px 0 20px">Details</h2>
+  <details><summary>Full results table</summary>
+    <p>Missing predictions: <b>0</b> in both tests and in the submission. R squared is the standard formula, on log price and on dollars.</p>
+    <div class="tscroll"><table id="resTable"></table></div></details>
+  <details><summary>Data and licences</summary><ul>
+    <li>Supplied for the day: flats-city-of-sydney.csv (181,711 addresses), flat-sales-city-of-sydney.csv (81,078 sales to 31 Aug 2026), blocks-homes-and-people-2021-2026.csv.</li>
+    <li>Microburbs API, /v1/suburbs/{suburb}/properties: bedrooms, bathrooms, car spaces, floor and dwelling type. These have no as-at date. Where the file also had a bedroom count, the two agreed 98.6% of the time.</li>
+    <li>Open G-NAF © Geoscape Australia. ABS Census 2021, CC BY 4.0. Data © Microburbs.</li></ul></details>
+  <details><summary>Model settings</summary><ul>
+    <li>Price index: Bailey, Muth and Nourse repeat-sales regression by quarter, smoothed between quarters.</li>
+    <li>Look-back clues are averages of earlier indexed sales only. A sale never sees itself or anything later.</li>
+    <li>LightGBM, Huber loss on log price, 1,500 rounds, recent sales weighted more (six-year decay), three seeds averaged, values lowered by 2%.</li></ul></details>
+  <details><summary>What did not work, and what we would do next</summary><ul>
+    <li>Cheap flats under $500k and buildings with little history are the weak spot.</li>
+    <li>A quarterly index is slow to catch a turn. A monthly index would react faster.</li>
+    <li>Shops, offices and car spaces get rough values. They are not scored.</li>
+    <li>Next: the direction a flat faces, views blocked by nearby buildings, and nearest sales for buildings with no history.</li></ul></details>
+</section>
+
+<footer><div class="wrap">Team FableAndAstra · Microburbs Hackathon, 7 November 2026 · Estimates are automated and indicative only. Data © Microburbs; Open G-NAF © Geoscape Australia; ABS Census CC BY 4.0.</div></footer>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const D = /*DATA*/null;
+const $ = s => document.querySelector(s);
+const fmtK = v => v >= 1e6 ? '$' + (v/1e6).toFixed(2) + 'm' : '$' + Math.round(v/1e3) + 'k';
+const pct = (v, d=0) => (v*100).toFixed(d) + '%';
+const plus = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v*100).toFixed(1) + '%';
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* theme */
+(() => { const root = document.documentElement;
+  try { const t = localStorage.getItem('theme'); if (t) root.dataset.theme = t; } catch(e) {}
+  $('#themeBtn').onclick = () => { const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark'; try { localStorage.setItem('theme', root.dataset.theme); } catch(e) {} }; })();
+
+/* tooltip */
+const tip = $('#tip');
+function showTip(html, x, y){ tip.innerHTML = html; tip.classList.add('on'); const w = tip.offsetWidth, h = tip.offsetHeight;
+  let L = x + 14, T = y - h - 12; if (L + w > innerWidth - 8) L = x - w - 14; if (T < 8) T = y + 16; tip.style.left = L + 'px'; tip.style.top = T + 'px'; }
+const hideTip = () => tip.classList.remove('on');
+const row = (a, b) => `<div class="r"><span>${a}</span><span>${b}</span></div>`;
+const hover = (el, fn) => { el.addEventListener('pointermove', e => showTip(fn(), e.clientX, e.clientY)); el.addEventListener('pointerleave', hideTip); };
+
+/* reveal + count-up */
+function countUp(el){ const target = +el.dataset.count, f = el.dataset.fmt, t0 = performance.now(), dur = reduce ? 0 : 1400;
+  const show = v => el.textContent = f === 'int' ? Math.round(v).toLocaleString('en-AU') : f === 'pct' ? Math.round(v*100) + '%' : f === 'x' ? v.toFixed(1) + '×' : '$' + Math.round(v/1e3) + 'k';
+  const step = now => { const k = dur ? Math.min(1, (now - t0)/dur) : 1; show(target * (1 - Math.pow(1-k, 3))); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step); }
+const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; e.target.classList.add('in');
+  e.target.querySelectorAll('[data-count]').forEach(countUp); e.target.dispatchEvent(new Event('reveal')); io.unobserve(e.target); }), {threshold: .15});
+document.querySelectorAll('.rv, .card').forEach(el => io.observe(el));
+const onReveal = (el, fn) => { const c = el.closest('.rv') || el.closest('.card'); if (!c || c.classList.contains('in')) fn(); else c.addEventListener('reveal', fn, {once:true}); };
+
+/* chart helpers */
+function vbars(host, items, fmt, max){ const h = $(host); max = max || Math.max(...items.map(d => d.v)) * 1.12;
+  h.innerHTML = items.map(d => `<div class="vbar ${d.base ? 'base' : ''}"><div class="v">${fmt(d.v)}</div><div class="col" data-h="${Math.max(1.5, d.v / max * 100)}"${d.c ? ` style="background:${d.c}"` : ''}></div><div class="k">${d.k}</div></div>`).join('');
+  h.querySelectorAll('.vbar').forEach((b, i) => hover(b, () => `<b>${items[i].k}</b>` + (items[i].tip || row('Value', fmt(items[i].v)))));
+  const go = () => h.querySelectorAll('.col').forEach((c, i) => setTimeout(() => c.style.height = c.dataset.h + '%', i * 80));
+  onReveal(h, go); return go; }
+function hbarsStatic(host, items, fmt, max){ const h = $(host); max = max || Math.max(...items.map(d => d.v));
+  h.innerHTML = items.map(d => `<div class="hrow st"><div class="nm">${d.k}</div><div class="tr"><div class="br" data-w="${d.v / max * 100}"${d.c ? ` style="background:${d.c}"` : ''}></div></div><div class="vl">${fmt(d.v)}</div></div>`).join('');
+  h.querySelectorAll('.hrow').forEach((r, i) => hover(r, () => `<b>${items[i].k}</b>` + (items[i].tip || '')));
+  onReveal(h, () => h.querySelectorAll('.br').forEach((b, i) => setTimeout(() => b.style.width = b.dataset.w + '%', i * 90))); }
+const NS = 'http://www.w3.org/2000/svg';
+function lineChart(host, data, opts){ const W = 560, H = 260, m = {l:38, r:14, t:14, b:26}; const ys = data.map(d => d[1]);
+  const y0 = Math.floor(Math.min(...ys) * 20) / 20, y1 = Math.ceil(Math.max(...ys) * 20) / 20 + .01;
+  const x = i => m.l + i / (data.length - 1) * (W - m.l - m.r), y = v => m.t + (y1 - v) / (y1 - y0) * (H - m.t - m.b);
+  let g = ''; const st = (y1 - y0) > .3 ? .1 : .05;
+  for (let v = Math.ceil(y0 / st) * st; v <= y1 + 1e-9; v += st) g += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${m.l-6}" y="${y(v)+4}" text-anchor="end">${v.toFixed(2)}</text>`;
+  data.forEach((d, i) => { if (opts.tick(d, i)) g += `<text x="${x(i)}" y="${H-6}" text-anchor="middle">${opts.tickLabel(d)}</text>`; });
+  const path = 'M' + data.map((d, i) => x(i) + ',' + y(d[1])).join('L');
+  g += `<path d="${path}L${x(data.length-1)},${H-m.b}L${m.l},${H-m.b}Z" fill="var(--band)"/><path class="draw" d="${path}" fill="none" stroke="var(--s1)" stroke-width="2.5" stroke-linejoin="round"/>`;
+  g += `<line class="cx" y1="${m.t}" y2="${H-m.b}" stroke="var(--ink-3)" stroke-dasharray="3 3" opacity="0"/><circle class="cd" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" opacity="0"/><rect class="hit" x="${m.l}" y="${m.t}" width="${W-m.l-m.r}" height="${H-m.t-m.b}" fill="transparent"/>`;
+  const s = document.createElementNS(NS, 'svg'); s.setAttribute('viewBox', `0 0 ${W} ${H}`); s.style.width = '100%'; s.style.height = 'auto'; s.innerHTML = g;
+  $(host).innerHTML = ''; $(host).appendChild(s);
+  const p = s.querySelector('.draw'), len = p.getTotalLength(); p.style.strokeDasharray = len; p.style.strokeDashoffset = len;
+  onReveal($(host), () => requestAnimationFrame(() => requestAnimationFrame(() => p.style.strokeDashoffset = 0)));
+  const cx = s.querySelector('.cx'), cd = s.querySelector('.cd'), hit = s.querySelector('.hit');
+  hit.addEventListener('pointermove', e => { const r = s.getBoundingClientRect(), px = (e.clientX - r.left) / r.width * W;
+    const i = Math.max(0, Math.min(data.length - 1, Math.round((px - m.l) / (W - m.l - m.r) * (data.length - 1))));
+    cx.setAttribute('x1', x(i)); cx.setAttribute('x2', x(i)); cx.setAttribute('opacity', 1); cd.setAttribute('cx', x(i)); cd.setAttribute('cy', y(data[i][1])); cd.setAttribute('opacity', 1);
+    showTip(`<b>${opts.name(data[i])}</b>` + row('Level', data[i][1].toFixed(3)) + row('vs Aug 2026', plus(data[i][1] / data[data.length-1][1] - 1)), e.clientX, e.clientY); });
+  hit.addEventListener('pointerleave', () => { cx.setAttribute('opacity', 0); cd.setAttribute('opacity', 0); hideTip(); }); }
+
+/* ===== Part 1: data ===== */
+const tot = D.sold_split.sold + D.sold_split.never;
+$('#dSold').textContent = Math.round(D.sold_split.sold / tot * 100) + '%';
+hbarsStatic('#cSold', [{k:'Sold at least once', v:D.sold_split.sold, c:'var(--s1)', tip: row('Addresses', D.sold_split.sold.toLocaleString('en-AU'))},
+  {k:'Never sold', v:D.sold_split.never, c:'var(--s2)', tip: row('Addresses', D.sold_split.never.toLocaleString('en-AU'))}], v => Math.round(v / tot * 100) + '%');
+$('#dBedIn').textContent = pct(D.bed_missing.input); $('#dBedApi').textContent = pct(D.bed_missing.with_api);
+(() => { const h = $('#cBeds'); h.innerHTML = D.years.map(y => `<div class="${y[0] < 2010 ? 'old' : ''}" data-h="${Math.max(1.5, y[2] * 100)}"></div>`).join('');
+  h.querySelectorAll('div').forEach((b, i) => hover(b, () => { const y = D.years[i]; return `<b>${y[0]}${y[0] === 2026 ? ' (to Aug)' : ''}</b>` + row('With bedrooms', pct(y[2])) + row('Sales', y[1].toLocaleString('en-AU')); }));
+  onReveal(h, () => h.querySelectorAll('div').forEach((b, i) => setTimeout(() => b.style.height = b.dataset.h + '%', i * 40))); })();
+vbars('#cAge', D.last_sale_age.map(a => ({k:a.label, v:a.share, base: a.label.startsWith('Never'), tip: row('Share of sales', pct(a.share, 1))})), v => pct(v), .5);
+$('#dRise').textContent = pct(D.market.since_2016);
+const idxLong = D.index.filter(d => d[0] >= '2010');
+function drawIdx(v){ if (v === 'long') { $('#idxSub').textContent = 'Same flats sold twice, by quarter. 1.00 = Jul to Aug 2026.';
+    lineChart('#cIdx', idxLong, {tick: d => d[0].endsWith('Q1') && +d[0].slice(0,4) % 4 === 2, tickLabel: d => d[0].slice(0,4), name: d => d[0]}); }
+  else { $('#idxSub').textContent = 'Monthly, from flats that resold. Noisy, but the mid 2026 dip is clear.';
+    lineChart('#cIdx', D.monthly, {tick: (d, i) => i % 3 === 0, tickLabel: d => new Date(d[0] + '-01').toLocaleString('en-AU', {month:'short'}) + ' ' + d[0].slice(2,4), name: d => new Date(d[0] + '-01').toLocaleString('en-AU', {month:'long', year:'numeric'})}); } }
+drawIdx('long');
+document.querySelectorAll('#idxSeg button').forEach(b => b.onclick = () => { document.querySelectorAll('#idxSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); drawIdx(b.dataset.v); });
+hbarsStatic('#cAnch', [D.anchors[0], ...D.anchors.slice(1).sort((x, y) => y.within10 - x.within10)].map((a, i) => ({k:a.label, v:a.within10, c: i === 0 ? 'var(--s1)' : 'var(--q2)', tip: row('Within 10%', pct(a.within10, 1)) + row('Flats it could price', a.n.toLocaleString('en-AU'))})), v => pct(v), 1);
+
+/* ===== insights ===== */
+$('#iPeak').textContent = plus(D.market.from_peak);
+$('#iPark').textContent = '+' + fmtK(D.park_dollars_2bed); $('#iPark2').textContent = pct(D.parking[1].pct);
+const f1120 = D.floors.find(f => f.label === '11 to 20').pct; $('#iFloor').textContent = plus(f1120);
+$('#iTier').textContent = pct(D.tiers[0].share_all);
+let bed = 'all', sortBy = 'price'; const L = $('#ladder'), RH = 26;
+L.style.height = D.suburbs.length * RH + 'px';
+D.suburbs.forEach(s => { const r = document.createElement('div'); r.className = 'hrow'; r.dataset.s = s.suburb;
+  r.innerHTML = `<div class="nm">${s.suburb}</div><div class="tr"><div class="br"></div></div><div class="vl"></div>`;
+  hover(r, () => `<b>${s.suburb}</b>` + row('All flats', fmtK(s.all)) + ['b1','b2','b3'].map((b, i) => row(`${i+1} bed`, s[b] ? fmtK(s[b]) : 'n/a')).join('') + row('Growth a year', s.cagr != null ? plus(s.cagr) : 'too few resales'));
+  L.appendChild(r); });
+function ladder(){ const val = s => sortBy === 'growth' ? s.cagr : s[bed];
+  const list = [...D.suburbs].sort((a, b) => (val(a) ?? -1e9) - (val(b) ?? -1e9)); if (sortBy === 'growth') list.reverse();
+  const max = sortBy === 'growth' ? Math.max(...D.suburbs.map(s => s.cagr ?? 0)) * 1.05 : Math.max(...D.suburbs.map(s => s[bed] ?? 0)) * 1.02;
+  list.forEach((s, i) => { const r = L.querySelector(`[data-s="${CSS.escape(s.suburb)}"]`), v = val(s);
+    r.style.top = i * RH + 'px'; r.querySelector('.br').style.width = v == null ? '0%' : Math.max(.5, Math.max(0, v) / max * 100) + '%';
+    r.querySelector('.vl').textContent = v == null ? 'n/a' : sortBy === 'growth' ? plus(v) : fmtK(v); });
+  $('#ladderSub').textContent = sortBy === 'growth' ? 'Typical yearly growth of flats resold in the past year, over the time they were held. n/a means fewer than 15 resales.'
+    : `Typical value ${bed === 'all' ? 'of a flat' : 'of a ' + bed[1] + '-bedroom flat'} on 31 August 2026. Hover a suburb for more.`; }
+L.querySelectorAll('.hrow').forEach((r, i) => r.style.top = i * RH + 'px');
+document.querySelectorAll('#bedSeg button').forEach(b => b.onclick = () => { bed = b.dataset.b; sortBy = 'price';
+  document.querySelectorAll('#bedSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); document.querySelectorAll('#sortSeg button').forEach(x => x.setAttribute('aria-pressed', x.dataset.s === 'price')); ladder(); });
+document.querySelectorAll('#sortSeg button').forEach(b => b.onclick = () => { sortBy = b.dataset.s; document.querySelectorAll('#sortSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); ladder(); });
+onReveal(L, ladder);
+
+/* ===== Part 2: split timeline ===== */
+const T0 = new Date('2010-01-01'), T1 = new Date('2026-08-31'), pos = d => (new Date(d) - T0) / (T1 - T0) * 100;
+function timeline(cut){ const h = $('#tl'), p = pos(cut), r = D.holdout[cut];
+  if (!h.children.length) { h.innerHTML = `<div class="seg tr"></div><div class="seg te"></div><div class="mk"></div>` + [2010, 2014, 2018, 2022, 2026].map(y => `<div class="ax" style="left:${pos(y + '-01-01')}%;${y === 2010 ? 'transform:none' : y === 2026 ? 'transform:translateX(-100%)' : ''}">${y}</div>`).join('');
+    hover(h.querySelector('.tr'), () => `<b>Training</b>` + row('Sales', D.train_n[cutNow].toLocaleString('en-AU')) + row('From', 'Jan 2010') + row('To', 'day before split'));
+    hover(h.querySelector('.te'), () => `<b>Test</b>` + row('Sales', D.holdout[cutNow].model.n.toLocaleString('en-AU')) + row('Price', 'under $1.2m') + row('To', '31 Aug 2026')); }
+  const tr = h.querySelector('.tr'), te = h.querySelector('.te'), mk = h.querySelector('.mk');
+  tr.style.left = '0%'; tr.style.width = `calc(${p}% - 3px)`; tr.textContent = `Training · ${D.train_n[cut].toLocaleString('en-AU')} sales`;
+  te.style.left = p + '%'; te.style.width = (100 - p) + '%'; te.textContent = '';
+  mk.style.left = p + '%'; mk.textContent = `Split ${new Date(cut).toLocaleString('en-AU', {month:'short', year:'numeric'})} · test ${r.model.n.toLocaleString('en-AU')} sales →`;
+  $('#trN').textContent = D.train_n[cut].toLocaleString('en-AU'); $('#teN').textContent = r.model.n.toLocaleString('en-AU'); }
+let cutNow = '2026-03-01'; timeline(cutNow);
+document.querySelectorAll('#splitSeg button').forEach(b => b.onclick = () => { cutNow = b.dataset.c; document.querySelectorAll('#splitSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); timeline(cutNow); });
+vbars('#cWin', D.windows.map(w => ({k:w.label, v:w.within10, base: !w.label.includes('used'), tip: row('Within 10%', pct(w.within10, 1))})), v => pct(v, 1), 1);
+
+/* ===== Part 3: results ===== */
+const A = D.holdout['2026-03-01'], Bh = D.holdout['2025-09-01'];
+$('#cW10').textContent = pct(A.model.within_10pct); $('#cLift').textContent = (A.model.within_10pct / A.median.within_10pct).toFixed(1) + '\u00d7'; $('#cMae').textContent = fmtK(A.model.median_abs_err);
+$('#mW10').textContent = pct(A.model.within_10pct); $('#mW10b').textContent = `Second test: ${pct(Bh.model.within_10pct, 1)}`;
+$('#mMae').textContent = fmtK(A.model.median_abs_err); $('#mMaeP').textContent = pct(A.model.median_abs_pct); $('#mMaeb').textContent = `Second test: ${fmtK(Bh.model.median_abs_err)}`;
+$('#mR2').textContent = A.model.r2_log.toFixed(2); $('#mR2p').textContent = Math.round(A.model.r2_log * 100) + '%'; $('#mR2b').textContent = `Second test: ${Bh.model.r2_log.toFixed(2)} · on dollars ${A.model.r2.toFixed(2)}`;
+$('#mBias').textContent = '+' + (D.bias_median * 100).toFixed(1) + '%'; $('#mBiasb').textContent = `Too high by 10%+: ${pct(D.over_under.over10)} · too low: ${pct(D.over_under.under10)}`;
+const VIEWS = {
+  base: {t:'Against simple methods', s:'Test from March 2026, 930 sales', n:'One clue gets four or five in ten right. Combining them gets seven in ten.',
+    items: () => [{k:'Our model', v:A.model.within_10pct, tip: row('Within 10%', pct(A.model.within_10pct, 1)) + row('Typical miss', fmtK(A.model.median_abs_err))},
+      {k:'Own last sale, today’s prices', v:A.last.within_10pct, base:true, tip: row('Within 10%', pct(A.last.within_10pct, 1)) + row('Only flats sold before', A.last.n)},
+      {k:'Suburb and bedroom median', v:A.median.within_10pct, base:true, tip: row('Within 10%', pct(A.median.within_10pct, 1)) + row('Typical miss', fmtK(A.median.median_abs_err))}]},
+  hist: {t:'Flats that sold before, and flats that never did', s:'Test from September 2025, 2,068 sales', n:'A past sale helps, but even never-sold flats land within 10% two times in three.',
+    items: () => [{k:'Sold before', v:Bh.prev.within_10pct, tip: row('Within 10%', pct(Bh.prev.within_10pct, 1)) + row('Sales', Bh.prev.n)}, {k:'Never sold before', v:Bh.noprev.within_10pct, c:'var(--q4)', tip: row('Within 10%', pct(Bh.noprev.within_10pct, 1)) + row('Sales', Bh.noprev.n)}]},
+  price: {t:'Accuracy by sale price', s:'Test from September 2025, 2,068 sales', n:'Cheap flats are hardest. Many are studios in buildings with few sales.',
+    items: () => D.price_bands.map(b => ({k:b.label, v:b.within10, tip: row('Within 10%', pct(b.within10, 1)) + row('Sales', b.n)}))},
+  miss: {t:'How far off we were', s:'Test from September 2025, 2,068 sales', n:'Four in ten land within 5%. Fewer than one in ten miss by over 20%.',
+    items: () => D.err_bands.map((b, i) => ({k:b.label, v:b.share, base: i > 1, tip: row('Share of sales', pct(b.share, 1))}))},
+  dir: {t:'When we missed by more than 10%', s:'Test from September 2025, 2,068 sales', n:'Misses lean high after the 2026 dip. Lenders should keep a small margin.',
+    items: () => [{k:'Our value too high', v:D.over_under.over10, c:'var(--s2)', tip: row('Share of sales', pct(D.over_under.over10, 1))}, {k:'Our value too low', v:D.over_under.under10, tip: row('Share of sales', pct(D.over_under.under10, 1))}]}};
+function resView(v){ const V = VIEWS[v]; $('#rTitle').textContent = V.t; $('#rSub').textContent = V.s; $('#rNote').textContent = V.n;
+  const go = vbars('#cRes', V.items(), x => pct(x), v === 'miss' || v === 'dir' ? .5 : 1); go(); }
+document.querySelectorAll('#resSeg button').forEach(b => b.onclick = () => { document.querySelectorAll('#resSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); resView(b.dataset.v); });
+onReveal($('#cRes'), () => resView('base'));
+(() => { const names = {model:'Our model', median:'Suburb and bedroom median', last:'Own last sale, today’s prices', prev:'Our model, sold before', noprev:'Our model, never sold'};
+  let h = '<tr><th>Test from</th><th>Method</th><th class="n">Sales</th><th class="n">Within 10%</th><th class="n">Typical miss</th><th class="n">R² log</th><th class="n">R² $</th></tr>';
+  for (const [cut, r] of Object.entries(D.holdout)) for (const k in names) { const v = r[k];
+    h += `<tr><td>${cut}</td><td>${names[k]}</td><td class="n">${v.n.toLocaleString()}</td><td class="n"><b>${pct(v.within_10pct, 1)}</b></td><td class="n">${fmtK(v.median_abs_err)}</td><td class="n">${v.r2_log.toFixed(2)}</td><td class="n">${v.r2.toFixed(2)}</td></tr>`; }
+  $('#resTable').innerHTML = h; })();
+
+/* ===== look up ===== */
+const B = D.buildings; // [name, suburb, flats, median, b1, b2, b3, tier]
+const SALES = D.building_sales;
+function pick(i){ const b = B[i], t = ['Low', 'Medium', 'High'][b[7]], vs = [b[4], b[5], b[6]], mx = Math.max(...vs.filter(Boolean), 1);
+  const ss = SALES[b[0]] || [], smx = Math.max(1, ...ss.flatMap(x => [x[2], x[3]]));
+  const hits10 = ss.filter(x => Math.abs(x[3] / x[2] - 1) <= .1).length;
+  const salesHtml = ss.length ? `<div class="sales"><h4>Real sales vs our estimate</h4><p class="muted" style="font-size:.82rem;margin-bottom:6px">Estimates made on 1 Sep 2025, before these flats sold. ${hits10} of ${ss.length} landed within 10%.</p>
+    ${ss.map(x => { const g = x[3] / x[2] - 1, ok = Math.abs(g) <= .1; return `<div class="sale"><div class="u"><b>${x[0]}</b><span>Sold ${x[1]}</span></div>
+      <div class="pair"><div class="pb"><span>Sold for</span><div class="t"><div class="f" style="background:var(--ink-3)" data-w="${x[2] / smx * 100}"></div></div><span class="v">${fmtK(x[2])}</span></div>
+      <div class="pb"><span>We said</span><div class="t"><div class="f" style="background:var(--s1)" data-w="${x[3] / smx * 100}"></div></div><span class="v">${fmtK(x[3])}</span></div></div>
+      <div class="gap ${ok ? 'ok' : 'off'}">${ok ? '\u2713 ' : ''}${plus(g)}</div></div>`; }).join('')}</div>`
+    : `<div class="sales"><p class="muted" style="font-size:.86rem">No sales here between Sep 2025 and Aug 2026 to compare against.</p></div>`;
+  $('#bcard').innerHTML = `<div class="eyebrow">${b[1]}</div><div class="addr">${b[0]}</div>
+    <h4 style="margin:16px 0 2px;font-size:.98rem">Value today, by bedrooms</h4>
+    <div class="lgd"><span><i></i>This building</span><span><i class="m"></i>Typical in ${b[1]}</span></div>
+    <div class="beds">${vs.map((v, j) => { const sv = subOf(b[1])['b' + (j+1)], top = Math.max(...vs.filter(Boolean), ...[1,2,3].map(n => subOf(b[1])['b' + n] || 0)) * 1.08;
+      const d = v && sv ? v / sv - 1 : null;
+      return `<div class="bed ${v ? '' : 'na'}"><div class="bt"><span>${j+1} bedroom</span><b>${v ? fmtK(v) : 'n/a'}</b></div>
+        <div class="trk"><div class="fil" data-w="${v ? v / top * 100 : 0}"></div>${sv ? `<i class="mk" style="left:${sv / top * 100}%"></i>` : ''}</div>
+        <div class="cmp">${d == null ? (v ? 'No suburb figure for this size' : 'No flats of this size here') : `<b class="${d >= 0 ? 'up' : 'dn'}">${plus(d)}</b> vs typical ${j+1}-bed in ${b[1]} (${fmtK(sv)})`}</div></div>`; }).join('')}</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><span class="pill">Typical flat ${fmtK(b[3])}</span><span class="pill">${b[2]} flats</span><span class="pill"><span class="dots">${[0,1,2].map(j => `<i class="${j <= b[7] ? 'f' : ''}"></i>`).join('')}</span>${t} evidence</span></div>
+    ${salesHtml}`;
+  requestAnimationFrame(() => requestAnimationFrame(() => $('#bcard').querySelectorAll('[data-w]').forEach(x => x.style.width = x.dataset.w + '%'))); }
+const subOf = n => D.suburbs.find(x => x.suburb === n) || {};
+const F = {q:'', sub:'', size:'', price:'', tier:'', sales:false, sort:'sales'}; let sel = -1;
+[...new Set(B.map(b => b[1]))].sort().forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; $('#fSub').appendChild(o); });
+function segFilter(id, key){ document.querySelectorAll(`#${id} button`).forEach(x => x.onclick = () => { F[key] = x.dataset.v;
+  document.querySelectorAll(`#${id} button`).forEach(y => y.setAttribute('aria-pressed', y === x)); listBuildings(); }); }
+segFilter('fSize', 'size'); segFilter('fPrice', 'price'); segFilter('fTier', 'tier');
+$('#fSub').onchange = e => { F.sub = e.target.value; listBuildings(); };
+$('#fSort').onchange = e => { F.sort = e.target.value; listBuildings(); };
+$('#fSales').onchange = e => { F.sales = e.target.checked; listBuildings(); };
+$('#q').addEventListener('input', e => { F.q = e.target.value.trim().toLowerCase(); listBuildings(); });
+$('#q').addEventListener('keydown', e => { if (e.key === 'Enter') { const r = $('#lkList .lkr'); if (r) r.click(); } });
+function listBuildings(){
+  let ix = B.map((b, i) => i).filter(i => { const b = B[i], n = (SALES[b[0]] || []).length;
+    if (F.q && !(b[0] + ' ' + b[1]).toLowerCase().includes(F.q)) return false;
+    if (F.sub && b[1] !== F.sub) return false;
+    if (F.size === 's' && b[2] >= 20) return false; if (F.size === 'm' && (b[2] < 20 || b[2] >= 100)) return false; if (F.size === 'l' && b[2] < 100) return false;
+    if (F.price) { const [lo, hi] = F.price.split('-').map(Number); if (b[3] < lo || b[3] >= hi) return false; }
+    if (F.tier !== '' && b[7] !== +F.tier) return false;
+    if (F.sales && !n) return false; return true; });
+  const key = {sales: i => -(SALES[B[i][0]] || []).length * 1e4 - B[i][2], hi: i => -B[i][3], lo: i => B[i][3], big: i => -B[i][2]}[F.sort];
+  ix.sort((a, b) => key(a) - key(b));
+  $('#lkCount').textContent = `${ix.length.toLocaleString('en-AU')} building${ix.length === 1 ? '' : 's'}`;
+  $('#lkList').innerHTML = ix.slice(0, 60).map(i => { const b = B[i], n = (SALES[b[0]] || []).length;
+    return `<div class="lkr ${i === sel ? 'on' : ''}" data-i="${i}"><b>${b[0]}</b><span class="p">${fmtK(b[3])}</span>
+      <small>${b[1]} · ${b[2]} flats · ${['Low', 'Medium', 'High'][b[7]]} evidence</small><small class="r">${n ? n + ' recent sale' + (n > 1 ? 's' : '') : ''}</small></div>`; }).join('')
+    + (ix.length > 60 ? `<p class="muted" style="font-size:.8rem;padding:8px 10px">Showing 60. Narrow the filters to see more.</p>` : '')
+    + (ix.length ? '' : `<p class="muted" style="font-size:.86rem;padding:8px 10px">No building matches these filters.</p>`); }
+$('#lkList').addEventListener('click', e => { const r = e.target.closest('[data-i]'); if (!r) return; sel = +r.dataset.i; pick(sel);
+  document.querySelectorAll('#lkList .lkr').forEach(x => x.classList.toggle('on', x === r)); });
+listBuildings();
+onReveal($('#lkList'), () => { const r = $('#lkList .lkr'); if (r && sel < 0) r.click(); });
+</script>
+</body>
+</html>

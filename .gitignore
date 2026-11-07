@@ -1,0 +1,11 @@
+# supplied files and API output: day-only use, never commit
+data/
+holdout_*.csv
+log_*.txt
+__pycache__/
+.env
+report_data.json
+buildings_full.json
+video/video_data.json
+video/frames/
+video/pitch_built.html

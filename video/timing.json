@@ -1,0 +1,119 @@
+{
+ "caps": [
+  [
+   0.25,
+   4.14,
+   "You want a flat in Sydney. It's never been sold.",
+   [
+    "never",
+    "been",
+    "sold."
+   ]
+  ],
+  [
+   4.19,
+   8.55,
+   "So what's it worth? We priced every flat in the city.",
+   [
+    "every",
+    "flat"
+   ]
+  ],
+  [
+   8.6,
+   12.0,
+   "Here's the trick. One clue is never enough,",
+   [
+    "trick."
+   ]
+  ],
+  [
+   12.0,
+   16.46,
+   "so we combine them all: past sales, the building, the bedrooms.",
+   [
+    "combine"
+   ]
+  ],
+  [
+   16.51,
+   20.12,
+   "We tested it blind, on sales it had never seen.",
+   [
+    "blind,"
+   ]
+  ],
+  [
+   20.12,
+   25.7,
+   "Seven in ten came within 10%. Nearly double the usual method.",
+   [
+    "Seven",
+    "in",
+    "ten"
+   ]
+  ],
+  [
+   25.75,
+   28.5,
+   "Buyers get a fair price before they bid,",
+   [
+    "fair",
+    "price"
+   ]
+  ],
+  [
+   28.5,
+   32.49,
+   "and know a car space adds $84,000.",
+   [
+    "$84,000."
+   ]
+  ],
+  [
+   32.54,
+   35.49,
+   "Banks see which flats are safe to value from a desk,",
+   [
+    "safe"
+   ]
+  ],
+  [
+   35.49,
+   37.54,
+   "and which need a valuer.",
+   [
+    "valuer."
+   ]
+  ],
+  [
+   37.59,
+   40.41,
+   "And it's already priced for this year's dip.",
+   [
+    "already"
+   ]
+  ],
+  [
+   40.46,
+   44.1,
+   "FableAndAstra. Every flat, priced.",
+   [
+    "Every",
+    "flat,",
+    "priced."
+   ]
+  ]
+ ],
+ "scenes": [
+  0.0,
+  3.99,
+  8.4,
+  16.31,
+  25.55,
+  32.34,
+  37.39,
+  40.26
+ ],
+ "speed": 1.04
+}
